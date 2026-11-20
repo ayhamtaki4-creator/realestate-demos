@@ -62,17 +62,17 @@ def place(l): return ' · '.join(x for x in [l.get('area'), l.get('sub')] if x)
 
 
 # ---------- share images ----------
-FONT_DIRS = ['/usr/share/fonts', '/usr/local/share/fonts', os.path.expanduser('~/.fonts'), '/Library/Fonts', 'C:/Windows/Fonts']
+FONT_DIRS = [os.path.join(ROOT, 'tools/fonts'), '/usr/share/fonts', '/usr/local/share/fonts', os.path.expanduser('~/.fonts'), '/Library/Fonts', 'C:/Windows/Fonts']
 def font(names, size):
     for d in FONT_DIRS:
         for base, _, files in os.walk(d):
             for n in names:
                 if n in files: return ImageFont.truetype(os.path.join(base, n), size)
     return ImageFont.load_default()
-F_AR = lambda s: font(['NotoNaskhArabic-Bold.ttf', 'NotoSansArabic-Bold.ttf', 'DejaVuSans-Bold.ttf', 'arialbd.ttf'], s)
-F_AR_L = lambda s: font(['NotoSansArabic-Regular.ttf', 'DejaVuSans.ttf', 'arial.ttf'], s)
-F_SANS = lambda s: font(['Poppins-SemiBold.ttf', 'Poppins-Medium.ttf', 'DejaVuSans-Bold.ttf'], s)
-F_SANS_L = lambda s: font(['Poppins-Light.ttf', 'Poppins-Regular.ttf', 'DejaVuSans.ttf'], s)
+F_AR = lambda s: font(['Amiri-Bold.ttf', 'NotoNaskhArabic-Bold.ttf', 'NotoSansArabic-Bold.ttf', 'DejaVuSans-Bold.ttf', 'arialbd.ttf'], s)
+F_AR_L = lambda s: font(['Amiri-Regular.ttf', 'NotoSansArabic-Regular.ttf', 'DejaVuSans.ttf', 'arial.ttf'], s)
+F_SANS = lambda s: font(['Amiri-Bold.ttf', 'Poppins-SemiBold.ttf', 'Poppins-Medium.ttf', 'DejaVuSans-Bold.ttf'], s)
+F_SANS_L = lambda s: font(['Amiri-Regular.ttf', 'Poppins-Light.ttf', 'Poppins-Regular.ttf', 'DejaVuSans.ttf'], s)
 RTL = dict(direction='rtl', language='ar')
 
 def og_image(S, photo, out, price=None, status=None, area=None):
@@ -174,6 +174,7 @@ def build(slug):
     os.makedirs(f'{out}/assets/og')
     shutil.copytree(f'demos/{slug}/img', f'{out}/assets/img')
     for f in ['app.js', 'style.css']: shutil.copy(f'{TPL}/assets/{f}', f'{out}/assets/{f}')
+    shutil.copytree(f'{TPL}/assets/fonts', f'{out}/assets/fonts')
     open(f'{out}/assets/data.js', 'w', encoding='utf-8').write(
         f'/* {S["brand"]["name"]} – generated from demos/{slug}/site.json, edit that file instead. */\n'
         'window.SITE = ' + json.dumps(S, ensure_ascii=False, indent=1) + ';\n')
