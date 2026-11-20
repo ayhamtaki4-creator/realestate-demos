@@ -1,0 +1,18 @@
+# Demos: hidden from search engines, link previews allowed
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: *
+Disallow: /

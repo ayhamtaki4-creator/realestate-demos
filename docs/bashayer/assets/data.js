@@ -1,0 +1,373 @@
+/* بشائر للعقارات – generated from demos/bashayer/site.json, edit that file instead. */
+window.SITE = {
+ "slug": "bashayer",
+ "brand": {
+  "name": "بشائر للعقارات",
+  "short": "بشائر",
+  "mark": "ب",
+  "sub": "حلب · سيف الدولة",
+  "arabic": true
+ },
+ "colors": {
+  "primary": "#14382F",
+  "accent": "#C49A4A"
+ },
+ "city": "حلب",
+ "region": "حلب وضواحيها",
+ "phone": "+963946853366",
+ "phoneDisplay": "+963 946 853 366",
+ "whatsapp": "963946853366",
+ "address": "حلب – سيف الدولة – مقابل مول الدوحة",
+ "social": {
+  "instagram": "https://www.instagram.com/bashayer.realestat/",
+  "facebook": "https://www.facebook.com/Aleppo.RealEstate.Network"
+ },
+ "about": "بوابتك لبيع وشراء وإيجار العقارات في حلب. كل العروض مرتّبة بمكان واحد، وتواصل مباشر برقم العرض.",
+ "agentNote": "مكتب سيف الدولة · تواصل برقم العرض",
+ "demoBy": "تصميم وتطوير Ayham Altaki",
+ "map": {
+  "center": [
+   36.205,
+   37.122
+  ],
+  "zoom": 13
+ },
+ "priceSteps": [
+  49000,
+  79000,
+  120000,
+  200000,
+  500000
+ ],
+ "hero": {
+  "img": "hero",
+  "kicker": "بيع · شراء · إيجار · حلب وكل سوريا",
+  "title": "كل عروض بشائر،<br>بمكان واحد ومرتّبة.",
+  "lead": "بدل ما تدوّر بين القنوات والغروبات: فلتر حسب المنطقة والسعر ونوع العقار، وتواصل معنا برقم العرض مباشرة."
+ },
+ "quick": [
+  [
+   "سيف الدولة",
+   "area=%D8%B3%D9%8A%D9%81%20%D8%A7%D9%84%D8%AF%D9%88%D9%84%D8%A9"
+  ],
+  [
+   "حلب الجديدة",
+   "area=%D8%AD%D9%84%D8%A8%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9"
+  ],
+  [
+   "الفرقان",
+   "area=%D8%A7%D9%84%D9%81%D8%B1%D9%82%D8%A7%D9%86"
+  ],
+  [
+   "أجار مفروش",
+   "status=rent&type=%D8%A8%D9%8A%D8%AA%20%D9%85%D9%81%D8%B1%D9%88%D8%B4"
+  ],
+  [
+   "للبيع",
+   "status=sale"
+  ]
+ ],
+ "budgets": {
+  "eyebrow": "قنواتنا حسب الفئة السعرية",
+  "title": "تصفّح حسب ميزانيتك",
+  "lead": "نفس قنوات الواتساب يلي بتعرفوها، صارت مربوطة بالموقع: كل زبون بيوصل لعروض ميزانيته بكبسة.",
+  "items": [
+   {
+    "label": "حتى 49 ألف $",
+    "min": 0,
+    "max": 49000,
+    "channel": "https://whatsapp.com/channel/0029VbAIdE1545uyFb35gM13"
+   },
+   {
+    "label": "50 – 79 ألف $",
+    "min": 50000,
+    "max": 79000,
+    "channel": "https://whatsapp.com/channel/0029Vb5krL22UPBAmQc3Jo0T"
+   },
+   {
+    "label": "80 – 120 ألف $",
+    "min": 80000,
+    "max": 120000,
+    "channel": "https://whatsapp.com/channel/0029VbB92pc5Ui2NkI4mH13e"
+   },
+   {
+    "label": "120 – 200 ألف $",
+    "tier": "VIP",
+    "min": 120000,
+    "max": 200000,
+    "channel": "https://whatsapp.com/channel/0029Vb5ompg7dmee750bex1Y"
+   },
+   {
+    "label": "200 ألف $ وما فوق",
+    "tier": "VIP+",
+    "min": 200000,
+    "max": null,
+    "channel": "https://whatsapp.com/channel/0029Vb7JdqjD38CYHbrWim1H"
+   }
+  ]
+ },
+ "services": [
+  {
+   "icon": "home",
+   "title": "بيع وشراء",
+   "text": "بيوت وشقق ومحلات بكل مناطق حلب، مع متابعة لحد التوقيع."
+  },
+  {
+   "icon": "rent",
+   "title": "إيجار مفروش وغير مفروش",
+   "text": "عروض إيجار جديدة كل يوم، شهري وسنوي."
+  },
+  {
+   "icon": "filter",
+   "title": "عروض مرتّبة حسب السعر",
+   "text": "قنوات واتساب مقسّمة حسب الميزانية، وهلق فلترة مباشرة على الموقع."
+  },
+  {
+   "icon": "megaphone",
+   "title": "تسويق عقارك",
+   "text": "منعرض عقارك على الموقع وعلى صفحاتنا وقنواتنا وغروباتنا."
+  }
+ ],
+ "sell": {
+  "img": "b4043_living",
+  "title": "بدك تبيع أو تأجّر عقارك؟",
+  "text": "ابعتلنا صور عقارك ومواصفاته، ومنعرضه على الموقع وعلى صفحاتنا وقنواتنا لحد ما يوصل للزبون الجدّي."
+ },
+ "areas": {
+  "سيف الدولة": {
+   "coords": [
+    36.192,
+    37.131
+   ],
+   "img": "b4029_salon",
+   "blurb": ""
+  },
+  "حلب الجديدة": {
+   "coords": [
+    36.1997,
+    37.107
+   ],
+   "img": "b7060_room",
+   "blurb": ""
+  },
+  "الفرقان": {
+   "coords": [
+    36.212,
+    37.121
+   ],
+   "img": "b7064_hall",
+   "blurb": ""
+  },
+  "الموكامبو": {
+   "coords": [
+    36.221,
+    37.128
+   ],
+   "img": "b4043_living",
+   "blurb": ""
+  },
+  "شارع النيل": {
+   "coords": [
+    36.214,
+    37.137
+   ],
+   "img": "b4038_balcony",
+   "blurb": ""
+  }
+ },
+ "listings": [
+  {
+   "id": "4043",
+   "ref": "4043",
+   "status": "rent",
+   "type": "بيت مفروش",
+   "featured": true,
+   "isNew": true,
+   "title": "منزل مفروش سوبر ملكي",
+   "area": "الموكامبو",
+   "sub": "",
+   "price": null,
+   "priceNote": "",
+   "size": null,
+   "beds": null,
+   "baths": null,
+   "floor": "",
+   "facing": "",
+   "finish": "سوبر ملكي",
+   "features": [
+    "مفروش بالكامل",
+    "إكساء سوبر ملكي"
+   ],
+   "desc": [
+    "من البيوت القليلة يلي بتنعرض للآجار ومفروش كمان: منزل مفروش سوبر ملكي بمنطقة الموكامبو."
+   ],
+   "photos": [
+    "b4043_living",
+    "b4043_bed",
+    "b4043_8",
+    "b4043_1",
+    "b4043_x7"
+   ],
+   "post": "https://www.instagram.com/p/Df6_77YCF5J/"
+  },
+  {
+   "id": "7064",
+   "ref": "7064",
+   "status": "rent",
+   "type": "بيت غير مفروش",
+   "featured": true,
+   "isNew": true,
+   "title": "منزل غير مفروش بطابق أمامي",
+   "area": "الفرقان",
+   "sub": "نزلة الفتال",
+   "price": null,
+   "priceNote": "",
+   "size": null,
+   "beds": null,
+   "baths": null,
+   "floor": "الثالث (أمامي)",
+   "facing": "",
+   "finish": "",
+   "features": [
+    "غير مفروش",
+    "طابق أمامي",
+    "بلكون على الشارع"
+   ],
+   "desc": [
+    "للآجار منزل غير مفروش بالفرقان، نزلة الفتال، بالطابق الثالث الأمامي."
+   ],
+   "photos": [
+    "b7064_hall",
+    "b7064_room",
+    "b7064_balcony"
+   ],
+   "post": "https://www.instagram.com/p/Df98zT-iApZ/"
+  },
+  {
+   "id": "7060",
+   "ref": "7060",
+   "status": "rent",
+   "type": "بيت غير مفروش",
+   "isNew": true,
+   "title": "منزل 240 م² – 5 غرف وصالون",
+   "area": "حلب الجديدة",
+   "sub": "شمالي · عند جامع زين العابدين",
+   "price": null,
+   "priceNote": "",
+   "size": 240,
+   "beds": null,
+   "baths": null,
+   "floor": "الأول",
+   "facing": "",
+   "finish": "سوبر سوبر ديلوكس",
+   "features": [
+    "5 غرف وصالون",
+    "غير مفروش",
+    "إكساء سوبر سوبر ديلوكس"
+   ],
+   "desc": [
+    "للآجار بحلب الجديدة الشمالي، عند جامع زين العابدين: طابق أول، 5 غرف وصالون، مساحة 240 متر، والحالة سوبر سوبر ديلوكس."
+   ],
+   "photos": [
+    "b7060_room",
+    "b7060_glass"
+   ],
+   "post": "https://www.instagram.com/p/Df4NEpMiHAM/"
+  },
+  {
+   "id": "4038",
+   "ref": "4038",
+   "status": "rent",
+   "type": "بيت مفروش",
+   "title": "شقة مفروشة بالكامل – عقد سنتين",
+   "area": "شارع النيل",
+   "sub": "السوق المحلي · جانب جامع قتيبة",
+   "price": null,
+   "priceNote": "",
+   "size": null,
+   "beds": null,
+   "baths": null,
+   "floor": "",
+   "facing": "",
+   "finish": "",
+   "features": [
+    "مفروشة بالكامل",
+    "عقد سنتين",
+    "بلكون بإطلالة مفتوحة",
+    "حمام جاكوزي"
+   ],
+   "desc": [
+    "للإيجار شقة مفروشة بالكامل بعقد سنتين، بحلب – شارع النيل، السوق المحلي (الصحة، جانب جامع قتيبة)."
+   ],
+   "photos": [
+    "b4038_balcony",
+    "b4038_view",
+    "b4038_kitchen",
+    "b4038_bath"
+   ],
+   "post": "https://www.instagram.com/p/Df14xXSCP87/"
+  },
+  {
+   "id": "4029",
+   "ref": "4029",
+   "status": "rent",
+   "type": "بيت نصف مفروش",
+   "title": "منزل نصف مفروش",
+   "area": "سيف الدولة",
+   "sub": "آخر خط سيف الدولة · خلف جامع النصر",
+   "price": null,
+   "priceNote": "",
+   "size": null,
+   "beds": null,
+   "baths": null,
+   "floor": "المعلّق (خلفي)",
+   "facing": "",
+   "finish": "",
+   "features": [
+    "نصف مفروش",
+    "مطبخ خشب كامل"
+   ],
+   "desc": [
+    "للآجار منزل نصف مفروش بآخر خط سيف الدولة، خلف جامع النصر، بالطابق المعلّق (خلفي)."
+   ],
+   "photos": [
+    "b4029_salon",
+    "b4029_aquarium",
+    "b4029_kitchen",
+    "b4029_bath"
+   ],
+   "post": "https://www.instagram.com/p/DfsbrrqiCqB/"
+  },
+  {
+   "id": "5087",
+   "ref": "5087",
+   "status": "sale",
+   "type": "شقة",
+   "featured": true,
+   "title": "شقة فخمة 175 م² – 5 غرف وصالون",
+   "area": "طريق الشام",
+   "sub": "قصر الضيافة",
+   "price": 150000,
+   "priceNote": "مع بازار",
+   "size": 175,
+   "sizeApprox": true,
+   "beds": null,
+   "baths": null,
+   "floor": "الأول مع ظهر كراج",
+   "facing": "شمالي غربي",
+   "finish": "سوبر ديلوكس",
+   "features": [
+    "5 غرف + صالون واسع",
+    "طابو أخضر نظامي",
+    "إشراف مفتوح وإطلالة مريحة",
+    "الشقة قيد الإكساء"
+   ],
+   "desc": [
+    "شقة سكنية بمواصفات فخمة ومساحة مميزة بقصر الضيافة على طريق الشام: طابق أول مع ظهر كراج، 5 غرف وصالون واسع، حوالي 175 م²، باتجاه شمالي غربي.",
+    "عرض بيجمع المساحة الكبيرة، الموقع المميز، والطابو النظامي. ملاحظة: الشقة قيد الإكساء."
+   ],
+   "photos": [],
+   "video": ""
+  }
+ ]
+};

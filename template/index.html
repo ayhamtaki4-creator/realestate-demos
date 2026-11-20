@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="{{THEME}}">
+<!--OG--><!--/OG-->
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>{{CSSVARS}}</style>
+<link rel="preload" as="image" href="assets/img/{{HERO_IMG}}.jpg">
+</head>
+<body>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="hero" aria-label="البحث عن عقار">
+    <img class="hero__img" src="assets/img/{{HERO_IMG}}.jpg" alt="" fetchpriority="high">
+    <div class="container hero__inner">
+      <span class="hero__kicker">{{HERO_KICKER}}</span>
+      <h1>{{HERO_TITLE}}</h1>
+      <p class="hero__lead">{{HERO_LEAD}}</p>
+
+      <div class="searchbox">
+        <div class="seg" role="group" aria-label="نوع البحث">
+          <button type="button" aria-pressed="true" data-status="sale">شراء</button>
+          <button type="button" aria-pressed="false" data-status="rent">إيجار</button>
+        </div>
+        <form id="hero-search" action="listings.html" role="search">
+          <input type="hidden" name="status" value="sale">
+          <label class="field">
+            <span class="sr-only">ابحث بالمنطقة أو نوع العقار</span>
+            <span aria-hidden="true" style="color:var(--muted);display:flex"></span>
+            <input type="search" name="q" placeholder="منطقة، شارع، أو نوع عقار…" autocomplete="off" enterkeyhint="search">
+          </label>
+          <button class="btn btn--primary" type="submit" aria-label="ابحث"><span>ابحث</span></button>
+        </form>
+      </div>
+      <div class="quick" aria-label="بحث سريع" id="quick"></div>
+    </div>
+  </section>
+
+  <!-- FEATURED -->
+  <section class="section">
+    <div class="container">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">عقارات مختارة</span>
+          <h2 class="title">أحدث العروض</h2>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px">
+          <a href="listings.html?status=all" class="link-arrow">كل العقارات <span id="all-count"></span></a>
+          <div class="rail-nav" data-rail="rail-featured">
+            <button type="button" data-dir="prev" aria-label="السابق"></button>
+            <button type="button" data-dir="next" aria-label="التالي"></button>
+          </div>
+        </div>
+      </div>
+      <div class="rail" id="rail-featured"></div>
+    </div>
+  </section>
+
+  <!-- BUDGETS (optional) -->
+  <section class="section section--cream" id="budgets" hidden>
+    <div class="container">
+      <div class="sec-head">
+        <div><span class="eyebrow" id="bud-eyebrow"></span><h2 class="title" id="bud-title"></h2></div>
+        <p class="sec-lead" id="bud-lead"></p>
+      </div>
+      <div class="budgets" id="bud-list"></div>
+    </div>
+  </section>
+
+  <!-- SIGNATURE (optional) -->
+  <section class="section section--cream" id="signature" hidden>
+    <div class="container">
+      <div class="sec-head"><div><span class="eyebrow">المجموعة الاستثنائية</span><h2 class="title">عقارات ما بتتكرر</h2></div></div>
+      <article class="signature rv" id="sig-card"></article>
+    </div>
+  </section>
+
+  <!-- AREAS -->
+  <section class="section">
+    <div class="container">
+      <div class="sec-head"><div><span class="eyebrow">تصفّح حسب المنطقة</span><h2 class="title" id="areas-title">مناطق منعرفها شارع شارع</h2></div></div>
+      <div class="areas" id="areas"></div>
+    </div>
+  </section>
+
+  <!-- PROJECTS (optional) -->
+  <section class="section section--navy" id="projects" hidden>
+    <div class="container">
+      <div class="sec-head">
+        <div><span class="eyebrow" id="pr-eyebrow"></span><h2 class="title" id="pr-title"></h2></div>
+        <p class="sec-lead" id="pr-lead"></p>
+      </div>
+      <div class="project rv" id="pr-body"></div>
+    </div>
+  </section>
+
+  <!-- SOLD (optional) -->
+  <section class="section" id="sold-sec" hidden>
+    <div class="container">
+      <div class="sec-head">
+        <div><span class="eyebrow">سجلّنا</span><h2 class="title">بعنا مؤخراً</h2></div>
+        <a href="listings.html?status=sold" class="link-arrow">كل العقارات المباعة</a>
+      </div>
+      <div class="proof" id="sold"></div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section section--cream">
+    <div class="container">
+      <div class="sec-head"><div><span class="eyebrow" id="sv-eyebrow"></span><h2 class="title">من أول سؤال لحد تسليم المفتاح</h2></div></div>
+      <div class="services" id="services"></div>
+    </div>
+  </section>
+
+  <!-- SELL -->
+  <section class="section" id="sell">
+    <div class="container">
+      <div class="owner rv">
+        <img id="sell-img" alt="" loading="lazy">
+        <div class="owner__body">
+          <span class="eyebrow">لأصحاب العقارات</span>
+          <h2 class="title" style="font-size:clamp(26px,3.4vw,38px)" id="sell-title"></h2>
+          <p id="sell-text"></p>
+          <div class="owner__actions">
+            <a class="btn btn--primary" target="_blank" rel="noopener" id="sell-cta">اعرض عقارك علينا</a>
+            <a class="btn btn--line" id="call-cta"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<a class="fab" target="_blank" rel="noopener" id="fab" aria-label="راسلنا على الواتساب"></a>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var U = UI, K = SITE, $ = U.$, $$ = U.$$, esc = U.esc;
+  U.mountChrome('home');
+
+  // hero search
+  var form = $('#hero-search');
+  $('.field span[aria-hidden]', form).innerHTML = U.I.search;
+  $$('.seg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('.seg button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      form.status.value = b.dataset.status;
+    });
+  });
+  // start on the tab that has listings
+  var live = K.listings.filter(function (l) { return l.status !== 'sold'; });
+  var nSale = live.filter(function (l) { return l.status === 'sale'; }).length, nRent = live.length - nSale;
+  if (nRent > nSale) $('.seg [data-status=rent]').click();
+  $('button[type=submit]', form).insertAdjacentHTML('afterbegin', U.I.search);
+  $('#quick').innerHTML = (K.quick || []).map(function (q) { return '<a href="listings.html?' + q[1] + '">' + esc(q[0]) + '</a>'; }).join('');
+
+  // featured rail
+  var feat = live.slice().sort(function (a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0); });
+  $('#rail-featured').innerHTML = feat.map(function (l) { return U.card(l); }).join('');
+  $('#all-count').textContent = '(' + live.length + ')';
+  var rn = $('[data-rail=rail-featured]');
+  $('[data-dir=prev]', rn).innerHTML = U.I.chevR; $('[data-dir=next]', rn).innerHTML = U.I.chevL;
+
+  // budgets
+  if (K.budgets) {
+    var Bd = K.budgets; $('#budgets').hidden = false;
+    $('#bud-eyebrow').textContent = Bd.eyebrow || ''; $('#bud-title').textContent = Bd.title || ''; $('#bud-lead').textContent = Bd.lead || '';
+    $('#bud-list').innerHTML = Bd.items.map(function (b) {
+      var n = live.filter(function (l) { return l.status === 'sale' && l.price != null && l.price >= (b.min || 0) && (b.max == null || l.price <= b.max); }).length;
+      return '<article class="budget rv">' + (b.tier ? '<span class="budget__tier">' + esc(b.tier) + '</span>' : '') +
+        '<b class="budget__range">' + esc(b.label) + '</b>' +
+        '<span class="budget__count">' + (n ? n + ' ' + (n === 1 ? 'عقار للبيع على الموقع' : 'عقارات للبيع على الموقع') : 'عروض يومية على القناة') + '</span>' +
+        '<div class="budget__links">' +
+          (n ? '<a class="site" href="listings.html?status=sale&price=' + (b.max || '') + '&min=' + (b.min || '') + '">شوف العروض ←</a>' : '') +
+          (b.channel ? '<a class="wa" href="' + b.channel + '" target="_blank" rel="noopener">' + U.I.wa + 'قناة الواتساب</a>' : '') +
+        '</div></article>';
+    }).join('');
+  }
+
+  // signature
+  var s = K.listings.filter(function (l) { return l.signature; })[0];
+  if (s) {
+    $('#signature').hidden = false;
+    $('#sig-card').innerHTML =
+      '<a class="signature__img" href="' + U.href(s.id) + '"><img src="' + U.img(s.photos[0]) + '" alt="' + esc(s.title) + '" loading="lazy"></a>' +
+      '<div class="signature__body">' +
+        '<span class="eyebrow">' + esc(s.area) + '</span>' +
+        '<h3 class="title" style="font-size:clamp(26px,3.2vw,36px)">' + esc(s.title) + '</h3>' +
+        '<p>' + esc((s.desc || [])[1] || (s.desc || [''])[0]) + '</p>' +
+        '<div class="sig-facts"><div><span>المساحة</span><b>' + U.sizeText(s) + '</b></div><div><span>السعر</span><b class="num">' + U.priceText(s) + '</b></div></div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn btn--gold" href="' + U.href(s.id) + '">شوف التفاصيل</a><a class="btn btn--light" target="_blank" rel="noopener" href="' + U.wa('مرحبا، بدي معاينة خاصة للعقار ' + U.refOf(s)) + '">اطلب معاينة خاصة</a></div>' +
+      '</div>';
+  }
+
+  // areas
+  $('#areas').innerHTML = Object.keys(K.areas).map(function (name) {
+    var a = K.areas[name];
+    var n = live.filter(function (l) { return l.area === name; }).length;
+    return '<a class="area rv" href="listings.html?area=' + encodeURIComponent(name) + '"><img src="' + U.img(a.img) + '" alt="" loading="lazy"><div class="area__body"><h3>' + esc(name) + '</h3>' + (a.blurb ? '<p>' + esc(a.blurb) + '</p>' : '') + '<span class="area__count">' + n + ' ' + (n === 1 ? 'عقار متاح' : 'عقارات متاحة') + ' ←</span></div></a>';
+  }).join('');
+
+  // projects (optional)
+  if (K.projects) {
+    var P = K.projects; $('#projects').hidden = false;
+    $('#pr-eyebrow').textContent = P.eyebrow || ''; $('#pr-title').textContent = P.title || ''; $('#pr-lead').textContent = P.lead || '';
+    var m = P.main;
+    $('#pr-body').innerHTML = '<div class="project__main">' + (m.pill ? '<span class="pill">' + esc(m.pill) + '</span>' : '') +
+      '<h3 class="project__name">' + esc(m.name) + '</h3><p style="color:#C9D2DF;line-height:1.9">' + esc(m.desc) + '</p>' +
+      (m.stats ? '<div class="stats">' + m.stats.map(function (st) { return '<div><span>' + esc(st[0]) + '</span><b class="num">' + esc(st[1]) + '</b></div>'; }).join('') + '</div>' : '') +
+      '<a class="btn btn--gold" style="align-self:flex-start" target="_blank" rel="noopener" href="' + U.wa('مرحبا، بدي تفاصيل مشروع ' + m.name) + '">اطلب التفاصيل وخطة الدفع</a></div>' +
+      (P.others && P.others.length ? '<div class="others">' + P.others.map(function (o) { return '<article><h3>' + esc(o.name) + '</h3><p>' + esc(o.desc) + '</p><a target="_blank" rel="noopener" href="' + U.wa('مرحبا، بدي تفاصيل ' + o.name) + '">اطلب التفاصيل ←</a></article>'; }).join('') + '</div>' : '');
+  }
+
+  // sold
+  var sold = K.listings.filter(function (l) { return l.status === 'sold'; });
+  if (sold.length) { $('#sold-sec').hidden = false; $('#sold').innerHTML = sold.map(function (l) { return U.card(l, { single: true }); }).join(''); }
+
+  // services
+  var SI = {
+    home: '<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',
+    rent: '<path d="M4 10h16v10H4zM2 10l10-7 10 7M9 14h6"/>',
+    building: '<path d="M4 21V9l8-6 8 6v12M9 21v-4h6v4M9 11h.01M15 11h.01"/><path d="M2 21h20"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    megaphone: '<path d="M3 10v4h4l6 4V6L7 10H3zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13"/>',
+    filter: '<path d="M4 6h16M7 12h10M10 18h4"/>'
+  };
+  $('#sv-eyebrow').textContent = 'ليش ' + K.brand.short;
+  $('#services').innerHTML = (K.services || []).map(function (v) {
+    return '<div class="service rv"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (SI[v.icon] || SI.home) + '</svg><h3>' + esc(v.title) + '</h3><p>' + esc(v.text) + '</p></div>';
+  }).join('');
+
+  // sell
+  var S = K.sell || {};
+  $('#sell-img').src = U.img(S.img || K.hero.img); $('#sell-title').textContent = S.title || 'بدك تبيع أو تأجّر عقارك؟'; $('#sell-text').textContent = S.text || '';
+  $('#sell-cta').href = U.wa('مرحبا، عندي عقار بدي اعرضه عندكم');
+  $('#call-cta').href = 'tel:' + K.phone; $('#call-cta').innerHTML = U.I.phone + '<span class="num">' + K.phoneDisplay + '</span>';
+  $('#fab').href = U.wa('مرحبا، بدي استشارة عقارية'); $('#fab').innerHTML = U.I.wa.replace('width="20" height="20"', 'width="28" height="28"');
+
+  U.wireCards(document); U.wireRails(); U.wireReveal();
+})();
+</script>
+</body>
+</html>

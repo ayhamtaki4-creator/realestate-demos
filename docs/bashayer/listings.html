@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14382F">
+<!--OG-->
+<meta name="description" content="بوابتك لبيع وشراء وإيجار العقارات في حلب. كل العروض مرتّبة بمكان واحد، وتواصل مباشر برقم العرض.">
+<link rel="canonical" href="https://ayhamtaki4-creator.github.io/realestate-demos/bashayer/listings.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="بشائر للعقارات">
+<meta property="og:locale" content="ar_SY">
+<meta property="og:title" content="عقارات للبيع والإيجار في حلب | بشائر للعقارات">
+<meta property="og:description" content="بوابتك لبيع وشراء وإيجار العقارات في حلب. كل العروض مرتّبة بمكان واحد، وتواصل مباشر برقم العرض.">
+<meta property="og:url" content="https://ayhamtaki4-creator.github.io/realestate-demos/bashayer/listings.html">
+<meta property="og:image" content="https://ayhamtaki4-creator.github.io/realestate-demos/bashayer/assets/og/home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="عقارات للبيع والإيجار في حلب | بشائر للعقارات">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="عقارات للبيع والإيجار في حلب | بشائر للعقارات">
+<meta name="twitter:description" content="بوابتك لبيع وشراء وإيجار العقارات في حلب. كل العروض مرتّبة بمكان واحد، وتواصل مباشر برقم العرض.">
+<meta name="twitter:image" content="https://ayhamtaki4-creator.github.io/realestate-demos/bashayer/assets/og/home.jpg">
+<!--/OG-->
+<title>عقارات للبيع والإيجار في حلب | بشائر للعقارات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="assets/style.css">
+<style>:root{--navy:#14382F;--navy-2:#1B4B3F;--navy-3:#236152;--ink:#14382F;--gold:#C49A4A;--gold-ink:#8E6D2E;--gold-light:#D6B880}</style>
+</head>
+<body>
+
+<div class="lbar">
+  <div class="container">
+    <label class="field">
+      <span class="sr-only">ابحث</span>
+      <span id="q-icon" style="color:var(--muted);display:flex" aria-hidden="true"></span>
+      <input type="search" id="q" placeholder="ابحث بالمنطقة أو نوع العقار" autocomplete="off" enterkeyhint="search">
+    </label>
+    <select class="desk" id="f-area-d" aria-label="المنطقة"></select>
+    <select class="desk" id="f-type-d" aria-label="نوع العقار"></select>
+    <select class="desk" id="f-price-d" aria-label="أعلى سعر"></select>
+    <button type="button" class="chip-btn" id="open-filters"><span id="filter-ic" aria-hidden="true"></span><span class="mob">فلترة</span><span class="desk">فلاتر أكثر</span><span class="dot"></span></button>
+  </div>
+</div>
+
+<div class="results">
+  <section class="results__list" aria-label="نتائج البحث">
+    <div>
+      <div class="status-tabs" role="group" aria-label="حالة العقار">
+        <button type="button" data-status="all" aria-pressed="false">الكل</button>
+        <button type="button" data-status="sale" aria-pressed="true">للبيع</button>
+        <button type="button" data-status="rent" aria-pressed="false">للإيجار</button>
+        <button type="button" data-status="sold" aria-pressed="false">تم البيع</button>
+        <button type="button" data-status="saved" aria-pressed="false">المحفوظة</button>
+      </div>
+      <div class="results__head">
+        <div>
+          <h1 id="r-title">العقارات</h1>
+          <p id="r-count" aria-live="polite"></p>
+        </div>
+        <label><span class="sr-only">ترتيب</span>
+          <select id="sort" class="chip-btn" style="font-weight:400">
+            <option value="new">الأحدث</option>
+            <option value="price-asc">السعر: من الأقل</option>
+            <option value="price-desc">السعر: من الأعلى</option>
+            <option value="size-desc">المساحة: الأكبر</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+  <aside class="results__map" aria-label="الخريطة">
+    <div id="map" class="map" dir="ltr"></div>
+  </aside>
+</div>
+
+<button type="button" class="map-toggle" id="map-toggle" aria-pressed="false"></button>
+
+<!-- filters sheet -->
+<div class="sheet" id="sheet" aria-hidden="true">
+  <div class="sheet__scrim" data-close></div>
+  <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet__head"><h2 id="sheet-title">فلترة النتائج</h2><button type="button" class="icon-btn" data-close aria-label="إغلاق" id="sheet-close"></button></div>
+    <div class="sheet__body">
+      <div class="fgroup"><h3>المنطقة</h3><div class="opts" id="o-area"></div></div>
+      <div class="fgroup"><h3>نوع العقار</h3><div class="opts" id="o-type"></div></div>
+      <div class="fgroup"><h3>السعر والمساحة</h3>
+        <div class="two">
+          <label>أعلى سعر<select id="f-price"></select></label>
+          <label>أقل مساحة<select id="f-size"></select></label>
+        </div>
+      </div>
+    </div>
+    <div class="sheet__foot">
+      <button type="button" class="btn btn--line" id="reset">مسح الكل</button>
+      <button type="button" class="btn btn--primary" style="flex:1" id="apply"></button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+(function () {
+  var U = UI, K = SITE, $ = U.$, $$ = U.$$;
+  U.mountChrome(new URLSearchParams(location.search).get('status') === 'rent' ? 'rent' : 'buy');
+  $('#q-icon').innerHTML = U.I.search; $('#filter-ic').innerHTML = U.I.filter; $('#sheet-close').innerHTML = U.I.close;
+
+  var P = new URLSearchParams(location.search);
+  var st = {
+    status: P.get('saved') ? 'saved' : (P.get('status') || 'all'),
+    area: P.get('area') || '', type: P.get('type') || '', price: P.get('price') || '', min: P.get('min') || '', size: P.get('size') || '',
+    q: P.get('q') || '', sort: P.get('sort') || 'new'
+  };
+
+  var areas = Object.keys(K.areas).concat(K.listings.map(function (l) { return l.area; })).filter(function (v, i, a) { return a.indexOf(v) === i; });
+  var types = K.listings.map(function (l) { return l.type; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
+  var prices = [['', 'أي سعر']].concat((K.priceSteps || [100000, 200000, 350000, 500000]).map(function (p) { return [String(p), 'حتى ' + p.toLocaleString('en-US') + '$']; }));
+  var sizes = [['', 'أي مساحة'], ['100', '100 م² وأكثر'], ['150', '150 م² وأكثر'], ['200', '200 م² وأكثر'], ['300', '300 م² وأكثر']];
+  var opt = function (arr, all) { return (all ? '<option value="">' + all + '</option>' : '') + arr.map(function (o) { return Array.isArray(o) ? '<option value="' + o[0] + '">' + o[1] + '</option>' : '<option value="' + o + '">' + o + '</option>'; }).join(''); };
+  $('#f-area-d').innerHTML = opt(areas, 'كل المناطق');
+  $('#f-type-d').innerHTML = opt(types, 'كل الأنواع');
+  $('#f-price-d').innerHTML = opt(prices); $('#f-price').innerHTML = opt(prices); $('#f-size').innerHTML = opt(sizes);
+  var pills = function (el, arr, key) {
+    el.innerHTML = ['<button type="button" data-v="">الكل</button>'].concat(arr.map(function (a) { return '<button type="button" data-v="' + U.esc(a) + '">' + U.esc(a) + '</button>'; })).join('');
+    $$('button', el).forEach(function (b) { b.addEventListener('click', function () { draft[key] = b.dataset.v; syncSheet(); }); });
+  };
+  var draft = {};
+  pills($('#o-area'), areas, 'area'); pills($('#o-type'), types, 'type');
+
+  var matches = function (l, s) {
+    if (s.status === 'saved') { if (!U.isSaved(l.id)) return false; }
+    else if (s.status !== 'all' && l.status !== s.status) return false;
+    if (s.area && l.area !== s.area) return false;
+    if (s.type && l.type !== s.type) return false;
+    if (s.price && (l.price == null || l.price > +s.price)) return false;
+    if (s.min && (l.price == null || l.price < +s.min)) return false;
+    if (s.size && (!l.size || l.size < +s.size)) return false;
+    if (s.q) {
+      var hay = [l.title, l.area, l.sub, l.type, statusLabel(l)].concat(l.features || []).join(' ');
+      var ok = s.q.trim().split(/\s+/).every(function (w) { return hay.indexOf(w) > -1; });
+      if (!ok) return false;
+    }
+    return true;
+  };
+  var statusLabel = function (l) { return U.statusLabel[l.status]; };
+  var sorters = {
+    'new': function () { return 0; },
+    'price-asc': function (a, b) { return (a.price == null ? 1e12 : a.price) - (b.price == null ? 1e12 : b.price); },
+    'price-desc': function (a, b) { return (b.price || -1) - (a.price || -1); },
+    'size-desc': function (a, b) { return (b.size || 0) - (a.size || 0); }
+  };
+
+  var titles = { sale: 'عقارات للبيع', rent: 'عقارات للإيجار', sold: 'عقارات تم بيعها', all: 'كل العقارات', saved: 'العقارات المحفوظة' };
+  var render = function () {
+    var res = K.listings.filter(function (l) { return matches(l, st); }).sort(sorters[st.sort]);
+    $('#grid').innerHTML = res.length ? res.map(function (l) { return U.card(l); }).join('') :
+      '<div class="empty"><p style="font-size:17px;color:var(--ink);margin-bottom:6px">' + (st.status === 'saved' ? 'لسا ما حفظت أي عقار' : 'ما في نتائج بهالمواصفات') + '</p><p>' + (st.status === 'saved' ? 'كبّس على القلب بأي عقار ليظهر هون.' : 'جرّب توسّع البحث، أو راسلنا ومنلاقيلك المناسب.') + '</p><a class="btn btn--wa" style="margin-top:16px" target="_blank" rel="noopener" href="' + U.wa('مرحبا، عم دوّر على عقار ' + (st.area ? 'ب' + st.area : '')) + '">' + U.I.wa + 'اطلب عقار</a></div>';
+    $('#r-title').textContent = titles[st.status] + (st.area ? ' في ' + st.area : ' في ' + K.region);
+    $('#r-count').textContent = res.length + ' ' + (res.length === 1 ? 'عقار' : 'عقارات');
+    $$('.status-tabs button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.status === st.status ? 'true' : 'false'); });
+    $('#f-area-d').value = st.area; $('#f-type-d').value = st.type; $('#f-price-d').value = st.price; $('#sort').value = st.sort; $('#q').value = st.q;
+    var nf = ['area', 'type', 'price', 'min', 'size'].filter(function (k) { return st[k]; }).length;
+    $('#open-filters').classList.toggle('active', nf > 0);
+    U.wireCards($('#grid'));
+    var u = new URLSearchParams();
+    Object.keys(st).forEach(function (k) { if (st[k] && !(k === 'sort' && st[k] === 'new')) u.set(k, st[k]); });
+    history.replaceState(null, '', 'listings.html' + (u.toString() ? '?' + u : ''));
+    drawPins(res);
+  };
+
+  // controls
+  $$('.status-tabs button').forEach(function (b) { b.addEventListener('click', function () { st.status = b.dataset.status; render(); }); });
+  $('#f-area-d').addEventListener('change', function (e) { st.area = e.target.value; render(); });
+  $('#f-type-d').addEventListener('change', function (e) { st.type = e.target.value; render(); });
+  $('#f-price-d').addEventListener('change', function (e) { st.price = e.target.value; render(); });
+  $('#sort').addEventListener('change', function (e) { st.sort = e.target.value; render(); });
+  var qt; $('#q').addEventListener('input', function (e) { clearTimeout(qt); qt = setTimeout(function () { st.q = e.target.value; render(); }, 250); });
+  document.addEventListener('click', function (e) { if (e.target.closest('[data-save]') && st.status === 'saved') setTimeout(render, 0); });
+
+  // sheet
+  var sheet = $('#sheet');
+  var syncSheet = function () {
+    $$('#o-area button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.v === draft.area ? 'true' : 'false'); });
+    $$('#o-type button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.v === draft.type ? 'true' : 'false'); });
+    $('#f-price').value = draft.price; $('#f-size').value = draft.size;
+    var n = K.listings.filter(function (l) { return matches(l, Object.assign({}, st, draft)); }).length;
+    $('#apply').textContent = 'عرض ' + n + ' ' + (n === 1 ? 'عقار' : 'عقارات');
+  };
+  var openSheet = function (v) {
+    if (v) { draft = { area: st.area, type: st.type, price: st.price, size: st.size }; syncSheet(); }
+    sheet.classList.toggle('open', v); sheet.setAttribute('aria-hidden', v ? 'false' : 'true'); document.body.classList.toggle('lock', v);
+    if (v) $('#sheet-close').focus(); else $('#open-filters').focus();
+  };
+  $('#open-filters').addEventListener('click', function () { openSheet(true); });
+  $$('[data-close]', sheet).forEach(function (b) { b.addEventListener('click', function () { openSheet(false); }); });
+  $('#f-price').addEventListener('change', function (e) { draft.price = e.target.value; syncSheet(); });
+  $('#f-size').addEventListener('change', function (e) { draft.size = e.target.value; syncSheet(); });
+  $('#reset').addEventListener('click', function () { draft = { area: '', type: '', price: '', size: '' }; syncSheet(); });
+  $('#apply').addEventListener('click', function () { st.min = ''; Object.assign(st, draft); openSheet(false); render(); window.scrollTo({ top: 0 }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheet.classList.contains('open')) openSheet(false); });
+
+  // map
+  var map, layer;
+  var initMap = function () {
+    if (map || !window.L) return;
+    map = L.map('map', { scrollWheelZoom: false, zoomControl: true, attributionControl: true }).setView(K.map.center, K.map.zoom || 12);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    layer = L.layerGroup().addTo(map);
+    var note = L.control({ position: 'bottomright' });
+    note.onAdd = function () { var d = L.DomUtil.create('div'); d.style.cssText = 'background:#fff;padding:6px 10px;border-radius:6px;font-size:12px;color:#5F6B7A;box-shadow:0 1px 4px rgba(0,0,0,.15)'; d.textContent = 'المواقع تقريبية حسب المنطقة'; return d; };
+    note.addTo(map);
+  };
+  var drawPins = function (res) {
+    initMap(); if (!map) return;
+    layer.clearLayers();
+    var groups = {};
+    res.forEach(function (l) { var a = K.areas[l.area]; if (!a) return; (groups[l.area] = groups[l.area] || []).push(l); });
+    var pts = [];
+    Object.keys(groups).forEach(function (name) {
+      var g = groups[name], c = K.areas[name].coords; pts.push(c);
+      var label = g.length === 1 ? U.priceText(g[0]).replace('السعر عند الطلب', 'عند الطلب') : name + ' · ' + g.length;
+      var m = L.marker(c, { icon: L.divIcon({ className: '', html: '<span class="kh-pin">' + U.esc(label) + '</span>', iconSize: [0, 0] }), keyboard: true, title: name });
+      m.bindPopup('<b>' + U.esc(name) + '</b><br>' + g.map(function (l) { return '<a href="' + U.href(l.id) + '" style="color:inherit;text-decoration:underline">' + U.esc(l.title) + '</a> — ' + U.priceText(l); }).join('<br>'));
+      layer.addLayer(m);
+    });
+    if (pts.length === 1) map.setView(pts[0], 14); else if (pts.length > 1) map.fitBounds(pts, { padding: [60, 60], maxZoom: 14 });
+  };
+
+  var mt = $('#map-toggle');
+  var setMapBtn = function () { var on = document.body.classList.contains('show-map'); mt.innerHTML = (on ? U.I.list + 'القائمة' : U.I.map + 'الخريطة'); mt.setAttribute('aria-pressed', on ? 'true' : 'false'); };
+  mt.addEventListener('click', function () {
+    document.body.classList.toggle('show-map'); setMapBtn(); window.scrollTo({ top: 0 });
+    if (map) setTimeout(function () { map.invalidateSize(); render(); }, 60);
+  });
+  setMapBtn();
+  if (!window.L) $('#map').innerHTML = '<p class="map-note" style="padding:20px">الخريطة بحاجة اتصال بالإنترنت.</p>';
+
+  if (!K.listings.some(function (l) { return l.status === 'sold'; })) { var sb = $('.status-tabs [data-status=sold]'); if (sb) sb.remove(); }
+  render();
+})();
+</script>
+</body>
+</html>
