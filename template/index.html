@@ -9,6 +9,7 @@
 <title>{{TITLE}}</title>
 <link rel="preload" href="assets/fonts/amiri-regular.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/amiri-bold.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <link rel="stylesheet" href="assets/style.css">
 <style>{{CSSVARS}}</style>
 <link rel="preload" as="image" href="assets/img/{{HERO_IMG}}.jpg">
@@ -26,6 +27,7 @@
 
       <div class="searchbox">
         <div class="seg" role="group" aria-label="نوع البحث">
+          <button type="button" aria-pressed="false" data-status="all">الكل</button>
           <button type="button" aria-pressed="true" data-status="sale">شراء</button>
           <button type="button" aria-pressed="false" data-status="rent">إيجار</button>
         </div>
@@ -36,10 +38,26 @@
             <span aria-hidden="true" style="color:var(--muted);display:flex"></span>
             <input type="search" name="q" placeholder="منطقة، شارع، أو نوع عقار…" autocomplete="off" enterkeyhint="search">
           </label>
-          <button class="btn btn--primary" type="submit" aria-label="ابحث"><span>ابحث</span></button>
+          <div class="sfields">
+            <label><span>المنطقة</span><select name="area" id="s-area"></select></label>
+            <label><span>نوع العقار</span><select name="type" id="s-type"></select></label>
+            <label><span>الميزانية</span><select name="price" id="s-price"></select></label>
+          </div>
+          <button class="btn btn--primary sbtn" type="submit" aria-label="ابحث"><span>ابحث</span></button>
         </form>
       </div>
       <div class="quick" aria-label="بحث سريع" id="quick"></div>
+    </div>
+  </section>
+
+  <!-- STATS (optional) -->
+  <section class="stats-strip" id="stats" hidden><div class="container"><div class="stats-strip__grid" id="stats-grid"></div></div></section>
+
+  <!-- RECENT -->
+  <section class="section section--tight" id="recent-sec" hidden>
+    <div class="container">
+      <div class="sec-head"><div><span class="eyebrow">رجعت؟ أهلاً فيك</span><h2 class="title">شاهدتها مؤخراً</h2></div></div>
+      <div class="rail" id="rail-recent"></div>
     </div>
   </section>
 
@@ -82,6 +100,25 @@
     </div>
   </section>
 
+  <!-- MAP -->
+  <section class="section" id="map-sec">
+    <div class="container">
+      <div class="sec-head">
+        <div><span class="eyebrow">العروض على الخريطة</span><h2 class="title">شوف وين بالضبط</h2></div>
+        <a href="listings.html?status=all" class="link-arrow">افتح البحث بالخريطة</a>
+      </div>
+      <div class="homemap" id="homemap" dir="ltr"></div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="section section--navy">
+    <div class="container">
+      <div class="sec-head"><div><span class="eyebrow">ببساطة</span><h2 class="title">كيف بتلاقي بيتك معنا</h2></div></div>
+      <ol class="how" id="how"></ol>
+    </div>
+  </section>
+
   <!-- AREAS -->
   <section class="section">
     <div class="container">
@@ -120,6 +157,27 @@
     </div>
   </section>
 
+  <!-- ALERT -->
+  <section class="section section--cream" id="alert">
+    <div class="container">
+      <div class="alertbox rv">
+        <div class="alertbox__copy">
+          <span class="eyebrow">نبّهني بعروض جديدة</span>
+          <h2 class="title" style="font-size:clamp(26px,3.4vw,38px)">ما لقيت يلي بدك ياه؟</h2>
+          <p>قلّنا شو عم تدوّر، ومنبعتلك العروض الجديدة يلي بتناسبك أول بأول على الواتساب.</p>
+        </div>
+        <form class="alertbox__form" id="alert-form">
+          <label>شو بدك<select name="status"><option value="rent">إيجار</option><option value="sale">شراء</option></select></label>
+          <label>المنطقة<select name="area" id="a-area"></select></label>
+          <label>نوع العقار<select name="type" id="a-type"></select></label>
+          <label>الميزانية<select name="price" id="a-price"></select></label>
+          <label class="wide">اسمك<input name="name" autocomplete="name" placeholder="اختياري"></label>
+          <button class="btn btn--wa btn--block wide" type="submit" id="alert-btn"></button>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- SELL -->
   <section class="section" id="sell">
     <div class="container">
@@ -143,6 +201,7 @@
 
 <script src="assets/data.js"></script>
 <script src="assets/app.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
 (function () {
   var U = UI, K = SITE, $ = U.$, $$ = U.$$, esc = U.esc;
@@ -162,6 +221,52 @@
   var nSale = live.filter(function (l) { return l.status === 'sale'; }).length, nRent = live.length - nSale;
   if (nRent > nSale) $('.seg [data-status=rent]').click();
   $('button[type=submit]', form).insertAdjacentHTML('afterbegin', U.I.search);
+  var areas = Object.keys(K.areas).concat(K.listings.map(function (l) { return l.area; })).filter(function (v, i, a) { return a.indexOf(v) === i; });
+  var types = K.listings.map(function (l) { return l.type; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
+  var opts = function (arr, all) { return '<option value="">' + all + '</option>' + arr.map(function (o) { return Array.isArray(o) ? '<option value="' + o[0] + '">' + esc(o[1]) + '</option>' : '<option>' + esc(o) + '</option>'; }).join(''); };
+  var priceOpts = (K.priceSteps || [100000, 200000, 350000, 500000]).map(function (p) { return [p, 'حتى ' + p.toLocaleString('en-US') + '$']; });
+  ['#s-area', '#a-area'].forEach(function (id) { $(id).innerHTML = opts(areas, 'كل المناطق'); });
+  ['#s-type', '#a-type'].forEach(function (id) { $(id).innerHTML = opts(types, 'كل الأنواع'); });
+  ['#s-price', '#a-price'].forEach(function (id) { $(id).innerHTML = opts(priceOpts, 'أي ميزانية'); });
+  form.addEventListener('submit', function () { $$('select, input[type=search]', form).forEach(function (el) { el.disabled = !el.value; }); setTimeout(function () { $$('select, input', form).forEach(function (el) { el.disabled = false; }); }, 50); });
+
+  // stats strip
+  if (K.stats && K.stats.length) { $('#stats').hidden = false; $('#stats-grid').innerHTML = K.stats.map(function (x) { return '<div><b>' + esc(x[0]) + '</b><span>' + esc(x[1]) + '</span></div>'; }).join(''); }
+
+  // recently viewed
+  var rec = U.recent().map(U.byId).filter(Boolean);
+  if (rec.length) { $('#recent-sec').hidden = false; $('#rail-recent').innerHTML = rec.map(function (l) { return U.card(l); }).join(''); }
+
+  // how it works
+  var how = K.how || [
+    ['فلتر وتصفّح', 'اختار المنطقة والنوع والميزانية، وشوف الصور والمواصفات والموقع على الخريطة.'],
+    ['تواصل برقم العرض', 'كبسة وحدة بتفتحلك واتساب مع رقم العرض، فما في داعي تشرح شي.'],
+    ['معاينة وتوقيع', 'منرتبلك المعاينة، ومنتابع معك الأوراق لحد ما تستلم المفتاح.']
+  ];
+  $('#how').innerHTML = how.map(function (h, i) { return '<li class="rv"><span class="how__n num">0' + (i + 1) + '</span><h3>' + esc(h[0]) + '</h3><p>' + esc(h[1]) + '</p></li>'; }).join('');
+
+  // map of live listings
+  if (window.L) {
+    var hm = L.map('homemap', { scrollWheelZoom: false }).setView(K.map.center, K.map.zoom || 12);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(hm);
+    var pts = [];
+    Object.keys(K.areas).forEach(function (name) {
+      var g = live.filter(function (l) { return l.area === name; }); if (!g.length) return;
+      var c = K.areas[name].coords; pts.push(c);
+      L.marker(c, { icon: L.divIcon({ className: '', html: '<span class="kh-pin">' + esc(name) + ' · ' + g.length + '</span>', iconSize: [0, 0] }) })
+        .bindPopup('<b>' + esc(name) + '</b><br>' + g.map(function (l) { return '<a href="' + U.href(l.id) + '" style="color:inherit;text-decoration:underline">' + esc(l.title) + '</a>'; }).join('<br>') + '<br><a href="listings.html?area=' + encodeURIComponent(name) + '">كل عروض ' + esc(name) + ' ←</a>').addTo(hm);
+    });
+    if (pts.length > 1) hm.fitBounds(pts, { padding: [50, 50], maxZoom: 14 });
+  } else { $('#homemap').innerHTML = '<p class="map-note" style="padding:20px">الخريطة بحاجة اتصال بالإنترنت.</p>'; }
+
+  // alert form
+  $('#alert-btn').innerHTML = U.I.wa + 'نبّهني على الواتساب';
+  if (nRent < nSale) $('#alert-form').status.value = 'sale';
+  $('#alert-form').addEventListener('submit', function (e) {
+    e.preventDefault(); var f = e.target;
+    window.open(U.wa(U.alertMsg({ status: f.status.value, area: f.area.value, type: f.type.value, price: f.price.value, name: f.name.value })), '_blank', 'noopener');
+  });
+
   $('#quick').innerHTML = (K.quick || []).map(function (q) { return '<a href="listings.html?' + q[1] + '">' + esc(q[0]) + '</a>'; }).join('');
 
   // featured rail

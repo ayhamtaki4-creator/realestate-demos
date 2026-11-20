@@ -23,6 +23,13 @@
     grid: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
     map: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m9 4-6 2v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg>',
     list: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
+    camera: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+    area: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4zM4 9h5M15 4v5M20 15h-5M9 20v-5"/></svg>',
+    floor: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4v-4h4v-4h4V8h4"/></svg>',
+    bed: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V7M3 13h18v5M21 18v-3a3 3 0 0 0-3-3h-8v1"/><circle cx="7" cy="10.5" r="1.5"/></svg>',
+    sofa: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3zM6 18v2M18 18v2"/></svg>',
+    bell: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/></svg>',
+    link: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1"/></svg>',
     filter: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>'
   };
 
@@ -49,6 +56,15 @@
   var metaParts = function (l) {
     return [l.beds ? l.beds + ' غرف نوم' : '', l.baths ? l.baths + ' حمام' : '', sizeText(l), floorText(l.floor)].filter(Boolean);
   };
+  var facts = function (l) {
+    var f = [];
+    if (l.size) f.push([I.area, sizeText(l)]);
+    if (l.beds) f.push([I.bed, l.beds + ' غرف نوم']);
+    else if (l.rooms) f.push([I.bed, l.rooms]);
+    if (l.floor) f.push([I.floor, floorText(l.floor).replace(/^الطابق /, 'ط. ')]);
+    if (l.type && f.length < 3) f.push([I.sofa, l.type]);
+    return f.slice(0, 3);
+  };
   var place = function (l) { return [l.area, l.sub].filter(Boolean).join(' · '); };
   var statusLabel = { sale: 'للبيع', rent: 'للإيجار', sold: 'تم البيع' };
 
@@ -64,6 +80,21 @@
   var syncSaved = function () {
     $$('[data-save]').forEach(function (b) { b.setAttribute('aria-pressed', isSaved(b.dataset.save) ? 'true' : 'false'); });
     $$('.badge-count').forEach(function (c) { c.textContent = saved.length; c.classList.toggle('on', saved.length > 0); });
+  };
+
+  /* ---------- recently viewed ---------- */
+  var recent = function () { try { return JSON.parse(localStorage.getItem(K.slug + '_recent') || '[]'); } catch (e) { return []; } };
+  var pushRecent = function (id) { var r = recent().filter(function (x) { return x !== id; }); r.unshift(id); try { localStorage.setItem(K.slug + '_recent', JSON.stringify(r.slice(0, 8))); } catch (e) {} };
+
+  /* ---------- alert ("notify me") -> WhatsApp ---------- */
+  var alertMsg = function (o) {
+    var parts = ['مرحبا، بدي تبعتولي عروض جديدة متل هيك:'];
+    if (o.status) parts.push('• ' + ({ sale: 'شراء', rent: 'إيجار' }[o.status] || o.status));
+    if (o.area) parts.push('• المنطقة: ' + o.area);
+    if (o.type) parts.push('• النوع: ' + o.type);
+    if (o.price) parts.push('• الميزانية: حتى ' + (+o.price).toLocaleString('en-US') + '$');
+    if (o.name) parts.push('• الاسم: ' + o.name);
+    return parts.join('\n');
   };
 
   /* ---------- toast ---------- */
@@ -99,12 +130,14 @@
         (multi ? '<div class="pcard__dots" aria-hidden="true">' + photos.map(function (_, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('') + '</div>' +
           '<button type="button" class="pcard__arrow pcard__arrow--prev" aria-label="الصورة السابقة">' + I.chevR + '</button>' +
           '<button type="button" class="pcard__arrow pcard__arrow--next" aria-label="الصورة التالية">' + I.chevL + '</button>' : '') +
+        (photos.length && (l.photos || []).length > 1 ? '<span class="pcard__count">' + I.camera + (l.photos || []).length + '</span>' : '') +
       '</div>' +
       '<a href="' + href + '" class="pcard__body">' +
         '<div class="pcard__price"><b>' + priceText(l) + '</b>' + (priceSub(l) ? '<small>' + esc(priceSub(l)) + '</small>' : '') + '</div>' +
-        '<div class="pcard__meta">' + metaParts(l).map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('') + '</div>' +
         '<div class="pcard__title">' + esc(l.title) + '</div>' +
-        '<div class="pcard__addr">' + esc(place(l)) + '</div>' +
+        '<div class="pcard__addr">' + I.pin + '<span>' + esc(place(l)) + '</span></div>' +
+        (facts(l).length ? '<div class="pcard__facts">' + facts(l).map(function (m) { return '<span>' + m[0] + esc(m[1]) + '</span>'; }).join('') + '</div>' : '') +
+        '<div class="pcard__foot"><span class="pcard__ref">رقم العرض ' + esc(refOf(l)) + '</span><span class="pcard__go">التفاصيل ' + I.arrowL + '</span></div>' +
       '</a>' +
     '</article>';
   };
@@ -231,6 +264,6 @@
     I: I, $: $, $$: $$, href: pageUrl, fmt: fmt, img: img, wa: wa, esc: esc, byId: byId,
     priceText: priceText, priceSub: priceSub, metaParts: metaParts, place: place, sizeText: sizeText, floorText: floorText,
     statusLabel: statusLabel, card: card, wireCards: wireCards, wireRails: wireRails, mountChrome: mountChrome,
-    wireReveal: wireReveal, refOf: refOf, markHtml: markHtml, toast: toast, isSaved: isSaved, saved: function () { return saved.slice(); }, syncSaved: syncSaved
+    wireReveal: wireReveal, refOf: refOf, facts: facts, recent: recent, pushRecent: pushRecent, alertMsg: alertMsg, markHtml: markHtml, toast: toast, isSaved: isSaved, saved: function () { return saved.slice(); }, syncSaved: syncSaved
   };
 })();

@@ -38,6 +38,7 @@
     return;
   }
   var sold = l.status === 'sold';
+  U.pushRecent(l.id);
   document.title = l.title + ' – ' + U.place(l) + ' | ' + K.brand.name;
   var ref = U.refOf(l);
   var msg = 'مرحبا، بدي استفسر عن العرض رقم ' + ref + ' (' + l.title + ' – ' + U.place(l) + ')';
@@ -84,6 +85,7 @@
             '<div class="pd-price"><b class="num">' + U.priceText(l) + '</b>' + (U.priceSub(l) ? '<small>' + U.esc(U.priceSub(l)) + '</small>' : '') + '</div>' +
             '<h1 class="pd-title">' + U.esc(l.title) + '</h1>' +
             '<div class="pd-addr">' + I.pin + '<span>' + U.esc(U.place(l)) + (l.area !== K.city ? '، ' + K.city : '') + '</span></div>' +
+            '<div class="sharebar"><a class="wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(l.title + ' – ' + U.place(l) + '\n' + location.href) + '">' + I.wa + 'ابعته لحدا</a><button type="button" data-copy>' + I.link + 'انسخ الرابط</button></div>' +
             (stats.length ? '<div class="pd-stats">' + stats.slice(0, 4).map(function (s) { return '<div><b>' + U.esc(s[0]) + '</b><span>' + s[1] + '</span></div>'; }).join('') + '</div>' : '') +
           '</header>' +
           '<nav class="pd-tabs" aria-label="أقسام الصفحة" id="pd-tabs"><a href="#overview" class="on">نظرة عامة</a><a href="#facts">المواصفات</a>' + (l.video ? '<a href="#tour">جولة فيديو</a>' : '') + (K.areas[l.area] ? '<a href="#location">الموقع</a>' : '') + '</nav>' +
@@ -108,6 +110,7 @@
             '<label>رقم الموبايل أو الواتساب<input name="phone" type="tel" required autocomplete="tel" dir="ltr" style="text-align:right"></label>' +
             '<label>نوع المعاينة<select name="kind"><option>زيارة على العقار</option><option>جولة فيديو مباشرة (للمغتربين)</option></select></label>' +
             '<button class="btn btn--primary btn--block" type="submit">أرسل الطلب</button></form>') +
+          '<div class="agent__alert">' + I.bell + '<span>بدك عروض متل هاد؟ <a target="_blank" rel="noopener" href="' + U.wa(U.alertMsg({ status: l.status === 'sold' ? 'sale' : l.status, area: l.area, type: l.type })) + '">نبّهني بالجديد</a></span></div>' +
         '</aside>' +
       '</div>' +
     '</div>' +
@@ -143,6 +146,9 @@
     if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowLeft') step(1); if (e.key === 'ArrowRight') step(-1);
   });
   $$('[data-open]').forEach(function (b) { b.addEventListener('click', function () { openLb(+b.dataset.open); }); });
+
+  // copy link
+  $$('[data-copy]').forEach(function (b) { b.addEventListener('click', function () { if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(function () { U.toast('انتسخ رابط العقار'); }); }); });
 
   // share
   $$('[data-share]').forEach(function (b) {

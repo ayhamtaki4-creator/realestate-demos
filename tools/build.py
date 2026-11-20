@@ -232,6 +232,12 @@ def site_files():
         '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">'
         '<meta name="viewport" content="width=device-width, initial-scale=1"><title>Demos</title></head>'
         '<body style="font-family:system-ui;padding:40px;color:#555">نماذج تجريبية خاصة.</body></html>\n')
+    open('docs/404.html', 'w', encoding='utf-8').write(
+        '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1"><title>الصفحة غير موجودة</title></head>'
+        '<body style="font-family:Georgia,serif;display:grid;place-items:center;min-height:90vh;color:#334;text-align:center">'
+        '<div><h1 style="font-size:28px">الصفحة غير موجودة</h1><p>ممكن يكون الرابط ناقص أو العرض انشال.</p>'
+        '<p><a href="javascript:history.back()">رجوع</a></p></div></body></html>\n')
 
 
 if __name__ == '__main__':

@@ -43,6 +43,7 @@
         <div>
           <h1 id="r-title">العقارات</h1>
           <p id="r-count" aria-live="polite"></p>
+          <button type="button" class="save-search" id="save-search"></button>
         </div>
         <label><span class="sr-only">ترتيب</span>
           <select id="sort" class="chip-btn" style="font-weight:400">
@@ -228,6 +229,8 @@
   if (!window.L) $('#map').innerHTML = '<p class="map-note" style="padding:20px">الخريطة بحاجة اتصال بالإنترنت.</p>';
 
   if (!K.listings.some(function (l) { return l.status === 'sold'; })) { var sb = $('.status-tabs [data-status=sold]'); if (sb) sb.remove(); }
+  $('#save-search').innerHTML = U.I.bell + 'نبّهني بعروض متل هيك';
+  $('#save-search').addEventListener('click', function () { window.open(U.wa(U.alertMsg({ status: ['sale', 'rent'].indexOf(st.status) > -1 ? st.status : '', area: st.area, type: st.type, price: st.price })), '_blank', 'noopener'); });
   render();
 })();
 </script>
