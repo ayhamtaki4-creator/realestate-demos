@@ -97,6 +97,14 @@
     return parts.join('\n');
   };
 
+  /* ---------- analytics: count WhatsApp / call clicks (GoatCounter, if enabled) ---------- */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="https://wa.me"], a[href^="tel:"]');
+    if (!a || !window.goatcounter || !window.goatcounter.count) return;
+    var kind = a.href.indexOf('tel:') === 0 ? 'call' : 'whatsapp';
+    window.goatcounter.count({ path: kind + '-' + location.pathname.split('/').slice(-2).join('/'), title: kind, event: true });
+  });
+
   /* ---------- toast ---------- */
   var toastEl, toastT;
   var toast = function (msg) {

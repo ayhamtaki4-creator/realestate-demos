@@ -136,7 +136,20 @@ def meta(S, title, desc, url, image, kind='website', extra=''):
 
 def put(text, block): return re.sub(r'<!--OG-->.*?<!--/OG-->', lambda m: block, text, count=1, flags=re.S)
 
+CFG = json.load(open('tools/site.json'))
+def analytics_tag():
+    """Visit counter, switched on by a key in tools/site.json:
+       "goatcounter": "<code>"   -> https://<code>.goatcounter.com  (free, no cookies)
+       "cloudflare": "<token>"   -> Cloudflare Web Analytics beacon"""
+    if CFG.get('goatcounter'):
+        return f'<script data-goatcounter="https://{CFG["goatcounter"]}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n'
+    if CFG.get('cloudflare'):
+        return ("<script defer src='https://static.cloudflareinsights.com/beacon.min.js' "
+                f"data-cf-beacon='{{\"token\": \"{CFG['cloudflare']}\"}}'></script>\n")
+    return ''
+
 def fill(text, S, title):
+    text = text.replace('</body>', analytics_tag() + '</body>', 1)
     rep = {'{{TITLE}}': esc(title), '{{THEME}}': S['colors']['primary'], '{{CSSVARS}}': css_vars(S['colors']),
            '{{BRAND}}': esc(S['brand']['name']), '{{HERO_IMG}}': S['hero']['img'],
            '{{HERO_KICKER}}': esc(S['hero']['kicker']), '{{HERO_LEAD}}': esc(S['hero']['lead']),
