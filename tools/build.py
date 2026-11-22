@@ -21,7 +21,7 @@ What it writes per demo:
 Every page is noindex and carries a "demo" strip; robots.txt only lets link-preview bots in.
 Needs: Python 3 with Pillow. No node.
 """
-import colorsys, html, json, os, re, shutil, sys
+import colorsys, hashlib, html, json, os, re, shutil, sys
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -155,6 +155,11 @@ def fill(text, S, title):
            '{{HERO_KICKER}}': esc(S['hero']['kicker']), '{{HERO_LEAD}}': esc(S['hero']['lead']),
            '{{HERO_TITLE}}': '<br>'.join(esc(x) for x in S['hero']['title'].split('<br>'))}
     for k, v in rep.items(): text = text.replace(k, v)
+    T = S.get('template') or 'template'                # cache-busting: ?v=<content hash> on shared assets
+    for a in ['app.js', 'style.css']:
+        h = hashlib.md5(open(f'{T}/assets/{a}', 'rb').read()).hexdigest()[:8]
+        text = text.replace(f'assets/{a}"', f'assets/{a}?v={h}"')
+    text = text.replace('assets/data.js"', 'assets/data.js?v=' + hashlib.md5(json.dumps(S, ensure_ascii=False).encode()).hexdigest()[:8] + '"')
     left = re.findall(r'\{\{[A-Z_]+\}\}', text)
     if left: sys.exit(f'unfilled tokens: {left}')
     return text
