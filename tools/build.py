@@ -142,7 +142,9 @@ def analytics_tag():
        "goatcounter": "<code>"   -> https://<code>.goatcounter.com  (free, no cookies)
        "cloudflare": "<token>"   -> Cloudflare Web Analytics beacon"""
     if CFG.get('goatcounter'):
-        return f'<script data-goatcounter="https://{CFG["goatcounter"]}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n'
+        # one entry per page: /sama/index.html and /sama/ count as the same page
+        return ("<script>window.goatcounter={path:function(p){return location.pathname.replace(/index\\.html$/,'')}};</script>"
+                f'<script data-goatcounter="https://{CFG["goatcounter"]}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n')
     if CFG.get('cloudflare'):
         return ("<script defer src='https://static.cloudflareinsights.com/beacon.min.js' "
                 f"data-cf-beacon='{{\"token\": \"{CFG['cloudflare']}\"}}'></script>\n")
