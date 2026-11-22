@@ -112,7 +112,10 @@ h2.t{font-size:clamp(30px,3.6vw,48px);line-height:1.15;margin:0;font-weight:600;
 .card .vid{position:absolute;bottom:14px;right:14px;z-index:2;display:flex;align-items:center;gap:8px;color:#fff;font-size:12.5px}
 .card .vid i{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:grid;place-items:center}
 .card .vid svg{width:12px;height:12px;fill:#fff}
-.card .ref{position:absolute;bottom:14px;left:14px;z-index:2;color:rgba(255,255,255,.85);font-size:12px}
+.card .ref{position:absolute;bottom:14px;left:14px;z-index:2;color:rgba(255,255,255,.85);font-size:12px;display:flex;align-items:center;gap:8px}
+.card .pc{display:inline-flex;align-items:center;gap:5px;background:rgba(7,17,31,.55);backdrop-filter:blur(6px);color:#fff;padding:4px 10px;border-radius:99px;font-size:12px}
+.card .pc svg{width:14px;height:14px}
+.card .pc b{font-weight:600}
 .card .bd{padding:20px 22px 22px;display:flex;flex-direction:column;gap:6px;flex:1}
 .card .where{font-size:13px;color:var(--sky-ink);display:flex;align-items:center;gap:6px}
 .card .where svg{width:14px;height:14px}

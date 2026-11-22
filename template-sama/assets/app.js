@@ -16,6 +16,7 @@
     search: P('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
     phone: P('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'),
     mail: P('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'),
+    cam: P('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
     menu: P('<path d="M4 7h16M4 12h16M4 17h10"/>'),
     type: P('<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>'),
     sort: P('<path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/>'),
@@ -43,7 +44,7 @@
     else if (l.finish) f.push('<span>' + I.gem + esc(l.finish) + '</span>');
     return '<a class="card rv" href="' + url(l) + '" data-goatcounter-click="card-' + l.id + '">' +
       '<div class="ph"><img loading="lazy" src="' + img(l.photos[0]) + '" alt="' + esc(l.title) + '"><div class="chips">' + chips + '</div>' +
-      (l.video ? '<span class="vid"><i>' + I.play + '</i>جولة فيديو</span>' : '') + '<span class="ref num">' + esc(l.ref) + '</span></div>' +
+      (l.video ? '<span class="vid"><i>' + I.play + '</i>جولة فيديو</span>' : '') + '<span class="ref">' + (l.photos.length > 1 ? '<span class="pc">' + I.cam + (l.photos.length === 2 ? 'صورتين' : '<b class="num">' + l.photos.length + '</b> صور') + '</span>' : '') + '<span class="num">' + esc(l.ref) + '</span></span></div>' +
       '<div class="bd"><span class="where">' + I.pin + esc(place(l)) + '</span><h3>' + esc(l.title) + '</h3><div class="facts">' + f.join('') + '</div>' +
       '<div class="ft"><span class="price">' + esc(price(l)) + '</span><span class="go">' + I.arrow + '</span></div></div></a>';
   }
