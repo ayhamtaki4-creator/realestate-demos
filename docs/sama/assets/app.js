@@ -97,7 +97,7 @@
   function map(el, items, opts) {
     if (!window.L || !el) return null;
     var m = L.map(el, { scrollWheelZoom: false, attributionControl: true }).setView(opts && opts.center || K.map.center, opts && opts.zoom || K.map.zoom);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO' }).addTo(m);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(m);
     items.forEach(function (it) {
       L.marker(it.coords, { icon: L.divIcon({ className: '', html: '<span class="pin">' + esc(it.label) + '</span>', iconSize: [0, 0] }) }).addTo(m).on('click', function () { if (it.href) location.href = it.href; });
     });
