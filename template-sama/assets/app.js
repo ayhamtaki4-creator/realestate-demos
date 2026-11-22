@@ -43,7 +43,9 @@
     if (l.floor) f.push('<span>' + I.floor + esc(l.floor) + '</span>');
     else if (l.finish) f.push('<span>' + I.gem + esc(l.finish) + '</span>');
     return '<a class="card rv" href="' + url(l) + '" data-goatcounter-click="card-' + l.id + '">' +
-      '<div class="ph"><img loading="lazy" src="' + img(l.photos[0]) + '" alt="' + esc(l.title) + '"><div class="chips">' + chips + '</div>' +
+      '<div class="ph"><div class="sl">' + l.photos.map(function (p, i) { return '<img loading="lazy" src="' + img(p) + '" alt="' + esc(l.title) + (i ? ' – ' + (i + 1) : '') + '">'; }).join('') + '</div>' +
+      (l.photos.length > 1 ? '<span class="sb prev" role="button" aria-label="الصورة السابقة">' + I.arrow + '</span><span class="sb next" role="button" aria-label="الصورة التالية">' + I.arrow + '</span><span class="dots">' + l.photos.map(function (_, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('') + '</span>' : '') +
+      '<div class="chips">' + chips + '</div>' +
       (l.video ? '<span class="vid"><i>' + I.play + '</i>جولة فيديو</span>' : '') + '<span class="ref">' + (l.photos.length > 1 ? '<span class="pc">' + I.cam + (l.photos.length === 2 ? 'صورتين' : '<b class="num">' + l.photos.length + '</b> صور') + '</span>' : '') + '<span class="num">' + esc(l.ref) + '</span></span></div>' +
       '<div class="bd"><span class="where">' + I.pin + esc(place(l)) + '</span><h3>' + esc(l.title) + '</h3><div class="facts">' + f.join('') + '</div>' +
       '<div class="ft"><span class="price">' + esc(price(l)) + '</span><span class="go">' + I.arrow + '</span></div></div></a>';
@@ -114,6 +116,19 @@
     addEventListener('keydown', function (e) { if (!lb.classList.contains('on')) return; if (e.key === 'Escape') lb.classList.remove('on'); if (e.key === 'ArrowLeft') $('.nx', lb).click(); if (e.key === 'ArrowRight') $('.pv', lb).click(); });
     return function (n) { i = n; show(); lb.classList.add('on'); };
   }
+
+  // in-card photo slider: swipe on touch, arrows on desktop; arrows don't open the listing
+  function slIndex(sl) { return Math.round(Math.abs(sl.scrollLeft) / sl.clientWidth); }
+  function slDots(sl) { var i = slIndex(sl); $$('.dots i', sl.parentNode).forEach(function (d, k) { d.classList.toggle('on', k === i); }); }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.sb'); if (!b) return;
+    e.preventDefault(); e.stopPropagation();
+    var sl = $('.sl', b.parentNode), n = sl.children.length, i = slIndex(sl) + (b.classList.contains('next') ? 1 : -1);
+    i = (i + n) % n;
+    var rtl = getComputedStyle(sl).direction === 'rtl';
+    sl.scrollTo({ left: (rtl ? -1 : 1) * i * sl.clientWidth, behavior: 'smooth' });
+  }, true);
+  document.addEventListener('scroll', function (e) { if (e.target.classList && e.target.classList.contains('sl')) slDots(e.target); }, true);
 
   window.UI = { $: $, $$: $$, esc: esc, I: I, byId: byId, price: price, size: size, place: place, img: img, wa: wa, askMsg: askMsg, url: url, card: card, reel: reel, mountChrome: mountChrome, reveal: reveal, map: map, lightbox: lightbox };
 })();

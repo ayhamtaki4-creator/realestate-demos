@@ -102,9 +102,10 @@ h2.t{font-size:clamp(30px,3.6vw,48px);line-height:1.15;margin:0;font-weight:600;
 .card{position:relative;display:flex;flex-direction:column;background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:0 1px 0 var(--line),0 0 0 1px var(--line);transition:transform .4s var(--ease),box-shadow .4s}
 .card:hover{transform:translateY(-6px);box-shadow:var(--sh)}
 .card .ph{position:relative;aspect-ratio:4/3.4;overflow:hidden;background:var(--deep-2)}
-.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
-.card:hover .ph img{transform:scale(1.06)}
-.card .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,.35),transparent 30%,transparent 65%,rgba(7,17,31,.55))}
+.card .sl{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.card .sl::-webkit-scrollbar{display:none}
+.card .ph img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start;scroll-snap-stop:always}
+.card .ph::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(7,17,31,.35),transparent 30%,transparent 65%,rgba(7,17,31,.55))}
 .chips{position:absolute;top:14px;inset-inline:14px;display:flex;gap:6px;z-index:2;flex-wrap:wrap}
 .chip{font-size:12px;font-weight:500;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.92);color:var(--ink)}
 .chip.sky{background:var(--sky);color:var(--night)}
@@ -112,6 +113,16 @@ h2.t{font-size:clamp(30px,3.6vw,48px);line-height:1.15;margin:0;font-weight:600;
 .card .vid{position:absolute;bottom:14px;right:14px;z-index:2;display:flex;align-items:center;gap:8px;color:#fff;font-size:12.5px}
 .card .vid i{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:grid;place-items:center}
 .card .vid svg{width:12px;height:12px;fill:#fff}
+.card .sb{position:absolute;top:50%;z-index:3;width:36px;height:36px;margin-top:-18px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--ink);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .25s,transform .25s;box-shadow:var(--sh-sm)}
+.card .sb svg{width:16px;height:16px}
+.card .sb.prev{right:12px}.card .sb.prev svg{transform:scaleX(-1)}
+.card .sb.next{left:12px}
+.card .sb:hover{transform:scale(1.08)}
+.card:hover .sb{opacity:1}
+.card .dots{position:absolute;bottom:52px;left:0;right:0;z-index:3;display:flex;justify-content:center;gap:5px;pointer-events:none}
+.card .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);transition:.25s}
+.card .dots i.on{background:#fff;width:16px;border-radius:3px}
+@media (hover:none){.card .sb{opacity:.9;width:32px;height:32px;margin-top:-16px}}
 .card .ref{position:absolute;bottom:14px;left:14px;z-index:2;color:rgba(255,255,255,.85);font-size:12px;display:flex;align-items:center;gap:8px}
 .card .pc{display:inline-flex;align-items:center;gap:5px;background:rgba(7,17,31,.55);backdrop-filter:blur(6px);color:#fff;padding:4px 10px;border-radius:99px;font-size:12px}
 .card .pc svg{width:14px;height:14px}
