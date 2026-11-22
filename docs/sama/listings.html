@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0A1A2F">
+<title>عقارات للبيع والإيجار في دمشق | سما الضاحية العقارية</title>
+<!--OG-->
+<meta name="description" content="سما الضاحية العقارية لبيع وشراء العقارات بأفضل العروض: شقق وفيلات وقصور ومحلات من ضاحية قدسيا للمالكي والمزة ودمشق القديمة.">
+<link rel="canonical" href="https://ayhamtaki4-creator.github.io/realestate-demos/sama/listings.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="سما الضاحية العقارية">
+<meta property="og:locale" content="ar_SY">
+<meta property="og:title" content="عقارات للبيع والإيجار في دمشق | سما الضاحية العقارية">
+<meta property="og:description" content="سما الضاحية العقارية لبيع وشراء العقارات بأفضل العروض: شقق وفيلات وقصور ومحلات من ضاحية قدسيا للمالكي والمزة ودمشق القديمة.">
+<meta property="og:url" content="https://ayhamtaki4-creator.github.io/realestate-demos/sama/listings.html">
+<meta property="og:image" content="https://ayhamtaki4-creator.github.io/realestate-demos/sama/assets/og/home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="عقارات للبيع والإيجار في دمشق | سما الضاحية العقارية">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="عقارات للبيع والإيجار في دمشق | سما الضاحية العقارية">
+<meta name="twitter:description" content="سما الضاحية العقارية لبيع وشراء العقارات بأفضل العروض: شقق وفيلات وقصور ومحلات من ضاحية قدسيا للمالكي والمزة ودمشق القديمة.">
+<meta name="twitter:image" content="https://ayhamtaki4-creator.github.io/realestate-demos/sama/assets/og/home.jpg">
+<!--/OG-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Readex+Pro:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="phead"><div class="wrap"><div class="crumbs"><a href="index.html">الرئيسية</a> / كل العروض</div><h1>كل العروض</h1><p id="sub"></p></div></div>
+<div class="bar"><div class="wrap">
+  <label class="field grow"><span id="i1"></span><span class="sr">بحث</span><input id="q" type="search" placeholder="ابحث بالمنطقة، الجزيرة أو رقم العرض…"></label>
+  <label class="field"><span id="i2"></span><span class="sr">النوع</span><select id="type"><option value="">كل الأنواع</option></select></label>
+  <label class="field"><span id="i3"></span><span class="sr">المنطقة</span><select id="area"><option value="">كل المناطق</option></select></label>
+  <label class="field"><span id="i4"></span><span class="sr">ترتيب</span><select id="sort"><option value="">الأحدث</option><option value="big">المساحة: الأكبر</option><option value="small">المساحة: الأصغر</option><option value="video">مع فيديو أولاً</option></select></label>
+  <span class="count" id="count"></span>
+</div></div>
+<section style="padding-top:40px"><div class="wrap"><div class="grid" id="grid"></div></div></section>
+<section style="padding-top:0"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">على الخريطة</div><h2 class="t" style="font-size:30px">العروض حسب المنطقة</h2></div></div><div class="map" id="lmap" style="min-height:420px"></div></div></section>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+(function () {
+  var U = UI, K = SITE, $ = U.$, I = U.I, esc = U.esc;
+  U.mountChrome('buy');
+  $('#i1').innerHTML = I.search; $('#i2').innerHTML = I.type; $('#i3').innerHTML = I.pin; $('#i4').innerHTML = I.sort;
+  $('#sub').textContent = K.listings.length + ' عرض للبيع في ' + K.region + ' · السعر عند الطلب برقم العرض';
+  var types = [], areas = [];
+  K.listings.forEach(function (l) { if (types.indexOf(l.type) < 0) types.push(l.type); if (areas.indexOf(l.area) < 0) areas.push(l.area); });
+  $('#type').innerHTML += types.map(function (t) { return '<option>' + esc(t) + '</option>'; }).join('');
+  $('#area').innerHTML += areas.map(function (t) { return '<option>' + esc(t) + '</option>'; }).join('');
+  var qs = new URLSearchParams(location.search);
+  $('#type').value = qs.get('type') || ''; $('#area').value = qs.get('area') || ''; $('#q').value = qs.get('q') || '';
+  function run() {
+    var q = $('#q').value.trim(), t = $('#type').value, a = $('#area').value, s = $('#sort').value;
+    var list = K.listings.filter(function (l) {
+      var hay = [l.title, l.area, l.sub, l.ref, l.type, (l.features || []).join(' ')].join(' ');
+      return (!t || l.type === t) && (!a || l.area === a) && (!q || hay.indexOf(q) >= 0);
+    });
+    if (s === 'big') list.sort(function (x, y) { return (y.size || 0) - (x.size || 0); });
+    if (s === 'small') list.sort(function (x, y) { return (x.size || 0) - (y.size || 0); });
+    if (s === 'video') list.sort(function (x, y) { return (y.video ? 1 : 0) - (x.video ? 1 : 0); });
+    $('#count').textContent = list.length + ' نتيجة';
+    $('#grid').innerHTML = list.length ? list.map(U.card).join('') : '<div class="empty">ما في عروض بهالمواصفات حالياً. <a class="link" href="' + U.wa('بدور على ' + (t || 'عقار') + (a ? ' ب' + a : '')) + '" target="_blank" rel="noopener">قلّنا شو بدك ومنلاقيلك</a></div>';
+    U.reveal();
+    var p = new URLSearchParams(); if (t) p.set('type', t); if (a) p.set('area', a); if (q) p.set('q', q);
+    history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : ''));
+  }
+  ['q', 'type', 'area', 'sort'].forEach(function (id) { $('#' + id).addEventListener(id === 'q' ? 'input' : 'change', run); });
+  run();
+  var A = K.areas;
+  U.map($('#lmap'), areas.filter(function (a) { return A[a]; }).map(function (a) {
+    var n = K.listings.filter(function (l) { return l.area === a; }).length;
+    return { coords: A[a].coords, label: a + ' · ' + n, href: 'listings.html?area=' + encodeURIComponent(a) };
+  }));
+})();
+</script>
+<script data-goatcounter="https://ayhamdemos.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

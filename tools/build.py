@@ -167,7 +167,7 @@ def check(S, src):
     if miss: sys.exit(f'{src}: missing keys {miss}')
     ids = [str(l['id']) for l in S['listings']]
     if len(ids) != len(set(ids)): sys.exit(f'{src}: duplicate listing ids')
-    imgs = {S['hero']['img'], (S.get('sell') or {}).get('img') or S['hero']['img']} | {a['img'] for a in S['areas'].values()}
+    imgs = {S['hero']['img'], *[h for h in (S['hero'].get('stack') or [])], (S.get('sell') or {}).get('img') or S['hero']['img']} | {a['img'] for a in S['areas'].values()}
     for l in S['listings']:
         imgs |= set(l.get('photos') or [])
         if l['status'] not in STATUS: sys.exit(f"{src}: listing {l['id']} has bad status {l['status']}")
@@ -181,13 +181,14 @@ def build(slug):
     S = json.load(open(src, encoding='utf-8'))
     S['slug'] = slug
     check(S, src)
+    TPL = S.get('template') or 'template'           # a demo can pick its own design (e.g. template-sama)
     out = f'docs/{slug}'
     site = f'{BASE}{slug}/'
     if os.path.isdir(out): shutil.rmtree(out)
     os.makedirs(f'{out}/assets/og')
     shutil.copytree(f'demos/{slug}/img', f'{out}/assets/img')
-    for f in ['app.js', 'style.css']: shutil.copy(f'{TPL}/assets/{f}', f'{out}/assets/{f}')
-    shutil.copytree(f'{TPL}/assets/fonts', f'{out}/assets/fonts')
+    shutil.copytree(f'{TPL}/assets', f'{out}/assets', dirs_exist_ok=True)
+    if not os.path.isdir(f'{out}/assets/fonts'): shutil.copytree('template/assets/fonts', f'{out}/assets/fonts')
     open(f'{out}/assets/data.js', 'w', encoding='utf-8').write(
         f'/* {S["brand"]["name"]} – generated from demos/{slug}/site.json, edit that file instead. */\n'
         'window.SITE = ' + json.dumps(S, ensure_ascii=False, indent=1) + ';\n')
