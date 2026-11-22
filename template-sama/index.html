@@ -117,7 +117,7 @@
   $('#sig').textContent = H.title; $('#sig-lead').textContent = H.lead;
   $('#sig-cta').href = U.wa(H.msg); $('#sig-cta').innerHTML = I.wa + esc(H.cta);
   $('#sig-fb').href = K.social.facebook;
-  var face = K.listings.filter(function (l) { return l.photos[0] === 'r6'; })[0] || K.listings[0];
+  var face = { photos: [K.hashem.face || K.listings[0].photos[0]] };
   $('#chat').innerHTML = '<div class="face"><img src="' + U.img(face.photos[0]) + '" alt=""><div><b>' + esc(B.name) + '</b><span>عادةً منرد خلال دقائق</span></div></div>' +
     '<div class="bubble me">' + esc(H.msg) + '<small>10:24</small></div>' +
     '<div class="bubble">يا هلا! 😄 قلّي شو بدك: المنطقة، المساحة والميزانية، وبعتلك أحلى العروض مع الفيديو.<small>10:25</small></div>' +
