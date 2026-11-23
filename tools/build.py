@@ -147,7 +147,7 @@ def analytics_tag():
         # with how long it stayed open, e.g. "time/sama/property-201/1-3m"
         timer = ("<script>(function(){var t0=Date.now(),sent=0,act=0;function b(s){return s<10?'0-10s':s<30?'10-30s':s<60?'30-60s':s<180?'1-3m':s<600?'3-10m':'10m+'}"
                  "function go(){if(sent||!window.goatcounter||!goatcounter.count)return;var s=(Date.now()-t0)/1000;if(s<2)return;sent=1;"
-                 "var p=location.pathname.replace(/^.*realestate-demos\\//,'').replace(/(index)?\\.html$/,'').replace(/\\/$/,'/home');"
+                 "var p=location.pathname.replace(/^.*realestate-demos\\//,'').replace(/^\\//,'').replace(/(index)?\\.html$/,'').replace(/\\/$/,'/home');"
                  "goatcounter.count({path:'time/'+p+'/'+b(s),title:'مدة البقاء',event:true})}"
                  "document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')go()});addEventListener('pagehide',go)})();</script>")
         return (timer + "<script>window.goatcounter={path:function(p){return location.pathname.replace(/index\\.html$/,'')}};</script>"
